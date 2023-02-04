@@ -5,22 +5,45 @@
 	import Card from './components/card.svelte';
 	import { BACKEND_BASE_URL } from '../lib/constants';
 	import SearchBar from './components/searchBar.svelte';
-
 	let NIM = $page.params.NIM;
 	let data: any = [];
-	let searchQuery: any = '';
+	let searchQuery: any = $page.url.searchParams.get('searchQuery');
 	onMount(async () => {
-		const response = await fetch(`${BACKEND_BASE_URL}/users/random`);
-		data = await response.json();
-		if (data.length == 0) {
-			goto('/404');
+		// check if searchQuery
+		if (searchQuery) {
+			const response = await fetch(`${BACKEND_BASE_URL}/users/search?searchQuery=${searchQuery}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			data = await response.json();
+			if (data.length == 0) {
+			}
+			console.log(data);
+			return;
+		} else {
+			const response = await fetch(`${BACKEND_BASE_URL}/users/random`);
+			data = await response.json();
+			if (data.length == 0) {
+			}
+			console.log(data);
 		}
-		console.log(data);
 	});
 
-	function handleSearch(e: any) {
+	async function handleSearch(e: any) {
 		e.preventDefault();
-		goto(`/`);
+		const response = await fetch(`${BACKEND_BASE_URL}/users/search?searchQuery=${searchQuery}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		data = await response.json();
+		if (data.length == 0) {
+		}
+		console.log(data);
+		goto(`/?searchQuery=${searchQuery}`);
 	}
 </script>
 
