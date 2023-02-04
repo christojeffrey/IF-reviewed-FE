@@ -5,6 +5,7 @@
 	import Card from './components/card.svelte';
 	import { BACKEND_BASE_URL } from '../lib/constants';
 	import SearchBar from './components/searchBar.svelte';
+
 	let NIM = $page.params.NIM;
 	let data: any = [];
 	let searchQuery: any = $page.url.searchParams.get('searchQuery');
