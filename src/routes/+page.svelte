@@ -53,5 +53,5 @@
 	<h1>Not Found</h1>
 {/if}
 {#each data as datum}
-	<Card NIM={datum.NIM} />
+	<Card detail={datum} />
 {/each}
