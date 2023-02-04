@@ -21,9 +21,9 @@
 	async function handleSubmit(e: any) {
 		const body = {
 			NIM,
-			comStyle: selectedComStyles,
+			comStyle: selectedComStyles.toString(),
 			rating,
-			reviewerID: 'test11ing'
+			reviewerID: 'sasadddf'
 		};
 		const res = await fetch(`${BACKEND_BASE_URL}/form/${NIM}`, {
 			mode: 'cors',
