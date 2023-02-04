@@ -1,4 +1,4 @@
-export const BACKEND_BASE_URL = 'http://localhost:3000/api';
+export const BACKEND_BASE_URL = 'https://if-reviewed-be.vercel.app/api';
 export const COM_STYLES = [
 	{ value: 1, text: 'Amiable' },
 	{ value: 2, text: 'Driving' },
