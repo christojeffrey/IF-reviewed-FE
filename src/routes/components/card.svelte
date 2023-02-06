@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import StarRating from 'svelte-stars-rating';
+	import Star from './star.svelte';
 	export let detail: any;
 	function reviewButtonOnClick() {
 		console.log('review');
@@ -15,7 +15,7 @@
 	</a>
 	<!-- reviewStar -->
 	<div>
-		<StarRating rating={detail.rating} />
+		<Star rating={detail.rating} />
 	</div>
 
 	<button on:click|once={reviewButtonOnClick}>review!</button>
