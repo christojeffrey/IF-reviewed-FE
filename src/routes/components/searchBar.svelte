@@ -42,7 +42,6 @@
 	.input-container {
 		/* rectangle with rounded */
 		border-radius: 1.5rem;
-		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
 		padding: 1rem;
 		width: fit-content;
 		/* flexbox */

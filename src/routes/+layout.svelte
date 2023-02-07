@@ -2,34 +2,34 @@
 	import NavBar from './components/navBar.svelte';
 </script>
 
-<div class="container">
-	<div class="wrapper">
+<div class="layout-container">
+	<div class="layout-wrapper">
 		<NavBar />
-		<div class="slot">
+		<div class="layout-slot">
 			<slot />
 		</div>
 	</div>
 </div>
 
-<style>
-	.container {
+<style global>
+	.layout-container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		min-height: 100%;
+		min-width: 100%;
+		position: relative;
 	}
-	.wrapper {
+	.layout-wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		background-color: aliceblue;
+		background-color: #edf0f3;
 		width: 100%;
 		max-width: 700px;
-		padding: 16px;
 		min-height: 100vh;
 	}
-	.slot {
-		margin: 16px;
-		width: 100%;
+	.layout-slot {
+		width: 95%;
 	}
 </style>

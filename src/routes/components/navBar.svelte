@@ -27,7 +27,11 @@
 
 	let isLoggedIn: boolean = false;
 	let userData: any;
+	let isUserModalOpen: boolean = false;
 
+	function handleImageClick() {
+		isUserModalOpen = !isUserModalOpen;
+	}
 	onAuthStateChanged(auth, (user) => {
 		if (user) {
 			// User is signed in, see docs for a list of available properties
@@ -66,6 +70,7 @@
 				// An error happened.
 				console.log('sign out failed');
 			});
+		isUserModalOpen = false;
 		isLoggedIn = false;
 	}
 	function handleLoginButton() {
@@ -97,29 +102,69 @@
 
 		goto(`/?searchQuery=${searchQuery}`);
 	}
+	function handleBackgroundClick() {
+		isUserModalOpen = false;
+	}
 </script>
 
 <div class="navbar-container">
 	<div class="wrapper">
 		<SearchBar bind:searchQuery onSearch={handleSearch} />
 		{#if isLoggedIn}
-			<span>{userData.displayName}</span>
-			<img class="user-profile" src={userData.photoURL} alt="user profile picture" />
-			<button on:click={handleSignOut}>sign out</button>
+			<div class="image-container">
+				<button on:click={handleImageClick}>
+					<img class="user-profile" src={userData.photoURL} alt="user profile" />
+				</button>
+				{#if isUserModalOpen}
+					<div class="card"><button on:click={handleSignOut}>sign out</button></div>
+				{/if}
+			</div>
 		{:else}
 			<button on:click={handleLoginButton}>login</button>
+		{/if}
+		<!-- modal if isUserModalOpen -->
+		{#if isUserModalOpen}
+			<button class="background" on:click={handleBackgroundClick} />
 		{/if}
 	</div>
 </div>
 
 <style>
+	.image-container {
+		position: relative;
+	}
+	.card {
+		position: absolute;
+		top: 50px;
+		right: 0;
+		background-color: white;
+		border-radius: 8px;
+		padding: 8px;
+		z-index: 2;
+	}
+	button {
+		border: none;
+	}
+
+	.background {
+		/* open in the top right, make whole scren darker */
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: rgba(0, 0, 0, 0.1);
+		z-index: 1;
+		border: none;
+	}
+
 	.navbar-container {
 		display: flex;
 		width: 100%;
 	}
 	.wrapper {
 		display: flex;
-		padding: 10px;
+		padding: 8px;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;

@@ -9,35 +9,64 @@
 </script>
 
 <div class="card-container">
-	<a href={`/detail/${detail.NIM}`}>
-		<h1>NIM</h1>
-		<p>{detail.NIM}</p>
-	</a>
-	<!-- reviewStar -->
-	<div>
-		<Star rating={detail.rating} />
-	</div>
+	<div class="card">
+		<a class="detail" href={`/detail/${detail.NIM}`}>
+			<div class="user-name">{detail.name}</div>
+			<div class="user-nim">{detail.NIM}</div>
+			<!-- reviewStar -->
+			<div>
+				<Star rating={detail.rating} />
+			</div>
+		</a>
 
-	<button on:click|once={reviewButtonOnClick}>review!</button>
+		<button on:click|once={reviewButtonOnClick}>review!</button>
+	</div>
 </div>
 
 <style>
+	.detail {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		padding: 4px;
+	}
+	.user-name {
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+	.user-nim {
+		padding: 2px;
+	}
 	a {
 		text-decoration: none;
 		color: black;
 	}
 	.card-container {
-		background-color: rgb(204, 190, 190);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		padding: 8px;
+	}
+	.card {
+		background-color: white;
 		border-radius: 0.5rem;
-		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
-		padding: 1rem;
-		width: fit-content;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		height: 100%;
 	}
 	button {
-		background-color: rgb(204, 190, 190);
-		border-radius: 0.5rem;
-		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+		margin: 8px;
+		color: #fff;
+		background-color: #38c172;
+		border-radius: 1.5rem;
 		padding: 1rem;
 		width: fit-content;
+		border: none;
 	}
 </style>
