@@ -19,6 +19,7 @@
 		appId: '1:118274056714:web:e4c68ce70a8d42aaa1b5f3',
 		measurementId: 'G-5NG1YPLRSE'
 	};
+	import HMIFLogo from '../../assets/HMIF-Logo.png';
 
 	// Initialize Firebase
 	const app = initializeApp(firebaseConfig);
@@ -144,6 +145,11 @@
 
 <div class="navbar-container">
 	<div class="wrapper">
+		<div class="image-container">
+			<button on:click={() => goto('/')}>
+				<img class="home-button" src={HMIFLogo} alt="Home" />
+			</button>
+		</div>
 		<SearchBar bind:searchQuery onSearch={handleSearch} />
 		{#if isLoggedIn}
 			<div class="image-container">
@@ -209,5 +215,12 @@
 	.user-profile {
 		border-radius: 50%;
 		width: 40px;
+	}
+
+	.home-button {
+		width: 45px;
+	}
+	.home-button:hover {
+		cursor: pointer;
 	}
 </style>
