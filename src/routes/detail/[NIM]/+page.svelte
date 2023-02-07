@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import { BACKEND_BASE_URL } from '../../../lib/constants';
 	const NIM = $page.params.NIM;
 	let data: any = {};
 	onMount(async () => {
-		const response = await fetch(`http://localhost:3000/api/user/${NIM}`, {
+		const response = await fetch(`${BACKEND_BASE_URL}/user/${NIM}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
