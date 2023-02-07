@@ -9,13 +9,36 @@
 	const rateVals: any = RATE_VALUES;
 	let selectedComStyles: number = 1;
 	let rating: number = 1;
+	let UID: any;
+	let idToken: any;
+	let firstTime: boolean = true;
 	onMount(async () => {
-		const res = await fetch(`${BACKEND_BASE_URL}/${NIM}`);
-		const data = await res.json();
-		if (data.length == 0) {
-			goto('/404');
+		if (typeof localStorage !== 'undefined') {
+			UID = localStorage.getItem('uid');
+			idToken = localStorage.getItem('idToken');
 		}
-		console.log(data);
+		if (!UID || !idToken) {
+			goto('/login');
+		}
+
+		const res = await fetch(`${BACKEND_BASE_URL}/users/review/${NIM}/${UID}`, {
+			mode: 'cors',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + idToken
+			}
+		});
+		const data = await res.json();
+
+		if (data.error) {
+			firstTime = true;
+		} else {
+			firstTime = false;
+			console.log(data);
+			selectedComStyles = parseInt(data.data.comStyle);
+			rating = data.data.rating;
+		}
 	});
 
 	async function handleSubmit(e: any) {
@@ -23,14 +46,15 @@
 			NIM,
 			comStyle: selectedComStyles.toString(),
 			rating,
-			reviewerID: 'sasadddf'
+			reviewerID: localStorage.getItem('uid')
 		};
 		const res = await fetch(`${BACKEND_BASE_URL}/form/${NIM}`, {
 			mode: 'cors',
 			method: 'POST',
 			body: JSON.stringify(body),
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + localStorage.getItem('idToken')
 			}
 		});
 		const data = await res.json();
@@ -56,7 +80,13 @@
 				<option value={rateVal.value}>{rateVal.text}</option>
 			{/each}
 		</select>
-		<button type="submit">Submit</button>
+		<button type="submit">
+			{#if firstTime}
+				Submit
+			{:else}
+				Update
+			{/if}
+		</button>
 	</form>
 </div>
 

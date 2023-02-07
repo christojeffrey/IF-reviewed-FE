@@ -6,7 +6,8 @@
 		GoogleAuthProvider,
 		signInWithPopup,
 		onAuthStateChanged,
-		signOut
+		signOut,
+		getIdToken
 	} from 'firebase/auth';
 	import { initializeApp } from 'firebase/app';
 	const firebaseConfig = {
@@ -41,8 +42,22 @@
 			isLoggedIn = true;
 			// set user to local storage
 			if (typeof localStorage !== 'undefined') {
-				localStorage.setItem('user', JSON.stringify(user));
+				localStorage.setItem('uid', uid);
 			}
+			// get id token
+			auth.currentUser
+				?.getIdToken(true)
+				.then(function (idToken) {
+					// Send token to your backend via HTTPS
+					// ...
+					if (typeof localStorage !== 'undefined') {
+						localStorage.setItem('idToken', idToken);
+					}
+				})
+				.catch(function (error) {
+					// Handle error
+					console.log(error);
+				});
 			userData = user;
 		} else {
 			// User is signed out
@@ -52,7 +67,8 @@
 			// remove user from local storage
 			//    prevent localStorage not defined error
 			if (typeof localStorage !== 'undefined') {
-				localStorage.removeItem('user');
+				localStorage.removeItem('uid');
+				localStorage.removeItem('idToken');
 			}
 		}
 	});
@@ -63,7 +79,8 @@
 				console.log('sign out success');
 				// remove user from local storage
 				if (typeof localStorage !== 'undefined') {
-					localStorage.removeItem('user');
+					localStorage.removeItem('uid');
+					localStorage.removeItem('idToken');
 				}
 			})
 			.catch((error) => {
@@ -84,6 +101,24 @@
 				console.log(user);
 				// ...
 				isLoggedIn = true;
+				// set user to local storage
+				if (typeof localStorage !== 'undefined') {
+					localStorage.setItem('uid', user.uid);
+				}
+				// get id token
+				auth.currentUser
+					?.getIdToken(true)
+					.then(function (idToken) {
+						// Send token to your backend via HTTPS
+						// ...
+						if (typeof localStorage !== 'undefined') {
+							localStorage.setItem('idToken', idToken);
+						}
+					})
+					.catch(function (error) {
+						// Handle error
+						console.log('error');
+					});
 			})
 			.catch((error) => {
 				// Handle Errors here.
