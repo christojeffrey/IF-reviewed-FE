@@ -1,43 +1,66 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { afterUpdate, beforeUpdate, onMount } from 'svelte';
 	import Card from './components/card.svelte';
 	import { BACKEND_BASE_URL } from '../lib/constants';
 
-	let data: any = [];
-	let isLoading: boolean = true;
+	let userData: any = [];
+
+	// set isLoading to true whenever the url changed
+
 	let searchQuery: any = $page.url.searchParams.get('searchQuery');
-	onMount(async () => {
-		// check if searchQuery
-		if (searchQuery) {
-			const response = await fetch(`${BACKEND_BASE_URL}/users/search?searchQuery=${searchQuery}`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json'
-				}
+	let isLoading: boolean = true;
+
+	$: if ($page.url.searchParams.get('searchQuery')) {
+		searchQuery = $page.url.searchParams.get('searchQuery');
+		console.log('searchQuery');
+		console.log(searchQuery);
+		updateUserDataBasedOnQuery(searchQuery);
+	}
+
+	function updateUserDataBasedOnQuery(query: string) {
+		isLoading = true;
+
+		fetch(`${BACKEND_BASE_URL}/users/search?searchQuery=${query}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then((response) => {
+				return response.json();
+			})
+			.then((data) => {
+				console.log('data');
+				console.log(data);
+				isLoading = false;
+				userData = data;
+			})
+			.catch((error) => {
+				console.log(error);
 			});
-			data = await response.json();
-			if (data.length == 0) {
-			}
-			console.log(data);
-			isLoading = false;
-			return;
+	}
+
+	onMount(async () => {
+		if (searchQuery) {
+			updateUserDataBasedOnQuery(searchQuery);
 		} else {
+			isLoading = true;
 			const response = await fetch(`${BACKEND_BASE_URL}/users/random`);
-			data = await response.json();
-			if (data.length == 0) {
+			userData = await response.json();
+			if (userData.length == 0) {
 			}
 			isLoading = false;
-			console.log(data);
+			console.log(userData);
 		}
 	});
 </script>
 
 {#if isLoading}
 	<h1>Loading...</h1>
-{:else if data.length != 0}
+{:else if userData.length != 0}
 	<div class="card-list-container">
-		{#each data as datum}
+		{#each userData as datum}
 			<Card detail={datum} />
 		{/each}
 	</div>
