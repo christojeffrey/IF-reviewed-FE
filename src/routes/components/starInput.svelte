@@ -166,6 +166,8 @@
 	}
 	.star-container {
 		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	.indicator {
 		font-size: 1rem;

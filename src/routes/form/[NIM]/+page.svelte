@@ -19,8 +19,8 @@
 	let firstTime: boolean = true;
 	let isIndicatorActive = false;
 	let style = {
-		styleStarWidth: 50,
-		styleEmptyStarColor: '#737373',
+		styleStarWidth: 60,
+		styleEmptyStarColor: '#ffffff',
 		styleFullStarColor: '#ffd219'
 	};
 
@@ -55,6 +55,7 @@
 
 	function handleComStyleChange(e: any) {
 		selectedComStyles = parseInt(e.target.value);
+		console.log(selectedComStyles);
 	}
 
 	async function handleSubmit(e: any) {
@@ -81,53 +82,67 @@
 <h1>Review {NIM}!</h1>
 <div class="form-container">
 	<form on:submit|preventDefault={handleSubmit}>
-		<div class="label-select">
-			<label for="comStyles">Communication Style</label>
-			<div class="grid-img-container">
-				<label>
-					<input
-						type="radio"
-						name="comStyles"
-						id="amiable"
-						value="1"
-						on:click={handleComStyleChange}
-					/>
-					<img src={Amiable} class="comStylesImg" alt="Amiable Communication Style" />
-				</label>
-				<label>
-					<input
-						type="radio"
-						name="comStyles"
-						id="driver"
-						value="2"
-						on:click={handleComStyleChange}
-					/>
-					<img src={Driver} class="comStylesImg" alt="Driver Communication Style" />
-				</label>
-				<label>
-					<input
-						type="radio"
-						name="comStyles"
-						id="expressive"
-						value="3"
-						on:click={handleComStyleChange}
-					/>
-					<img src={Expressive} class="comStylesImg" alt="Expressive Communication Style" />
-				</label>
-				<label>
-					<input
-						type="radio"
-						name="comStyles"
-						id="analytical"
-						value="4"
-						on:click={handleComStyleChange}
-					/>
-					<img src={Analytical} class="comStylesImg" alt="Analyitical Communication Style" />
-				</label>
+		<div style="display: grid; justify-items: center;">
+			<div class="grid-container">
+				<div class="label-container" id="analytical-bg">
+					<label class="comStyle-label">
+						<input
+							type="radio"
+							name="comStyles"
+							id="amiable"
+							value="1"
+							on:click={handleComStyleChange}
+						/>
+						<h3>ANALYTICAL</h3>
+						<p>serious</p>
+						<p>critical</p>
+					</label>
+				</div>
+				<div class="label-container" id="driver-bg">
+					<label class="comStyle-label">
+						<input
+							type="radio"
+							name="comStyles"
+							id="driver"
+							value="2"
+							on:click={handleComStyleChange}
+						/>
+						<h3>DRIVER</h3>
+						<p>dominating</p>
+						<p>decisive</p>
+					</label>
+				</div>
+				<div class="label-container" id="amiable-bg">
+					<label class="comStyle-label">
+						<input
+							type="radio"
+							name="comStyles"
+							id="expressive"
+							value="3"
+							on:click={handleComStyleChange}
+						/>
+						<h3>AMIABLE</h3>
+						<p>agreeable</p>
+						<p>supportive</p>
+					</label>
+				</div>
+				<div class="label-container" id="expressive-bg">
+					<label class="comStyle-label">
+						<input
+							type="radio"
+							name="comStyles"
+							id="analytical"
+							value="4"
+							on:click={handleComStyleChange}
+						/>
+						<h3>EXPRESSIVE</h3>
+						<p>ambitious</p>
+						<p>enthusiastic</p>
+					</label>
+				</div>
 			</div>
 		</div>
-		<div class="label-select">
-			<label for="comStyles">Rate</label>
+		<div class="label-select" style="margin-top: 3rem;">
 			<Star {isIndicatorActive} {style} bind:rating />
 		</div>
 		<button type="submit" id="submitButton">
@@ -144,26 +159,21 @@
 	.form-container {
 		display: flex;
 		flex-direction: column;
-		background-color: white;
 		padding: 1rem;
 		border-radius: 1rem;
 	}
 	form {
 		display: flex;
 		flex-direction: column;
+		justify-items: center;
 	}
-	.grid-img-container {
+	.grid-container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		grid-template-rows: repeat(2, 1fr);
-		grid-gap: 1rem;
 		align-items: center;
 		justify-items: center;
-	}
-	.comStylesImg {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		width: 70%;
 	}
 	label {
 		font-weight: bold;
@@ -174,6 +184,7 @@
 	.label-select {
 		display: flex;
 		flex-direction: column;
+		justify-items: center;
 		margin-top: 0.5rem;
 	}
 	label > input {
@@ -181,14 +192,20 @@
 		visibility: hidden;
 		position: absolute;
 	}
-	label > input + img {
-		/* style gambar */
+	label:hover {
 		cursor: pointer;
-		border: 2px solid transparent;
 	}
-	label > input:checked + img {
-		/* (RADIO CHECKED) style gambar */
+	label > input:checked {
 		border: 2px solid #f00;
+		font-size: x-small;
+	}
+	label > p {
+		margin: 0;
+		font-weight: 400;
+	}
+	label > h3 {
+		font-size: x-large;
+		margin-top: 0;
 	}
 	#submitButton {
 		margin-top: 1rem;
@@ -197,9 +214,10 @@
 		border: none;
 		outline: none;
 		padding: 0.5rem;
-		border-radius: 1rem;
+		border-radius: 0.7rem;
 		font-weight: bold;
 		font-size: medium;
+		background-color: white;
 	}
 	#submitButton:hover {
 		border: none;
@@ -210,5 +228,61 @@
 	#submitButton:active:focus {
 		border: none;
 		outline: none;
+	}
+	.comStyle-label {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		margin: 0;
+	}
+	.label-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		aspect-ratio: 1/1;
+		width: 100%;
+		border: 4px solid #667181;
+		justify-content: center;
+	}
+	#analytical-bg {
+		background: linear-gradient(
+			142.58deg,
+			rgba(249, 35, 35, 0.916667) -58.63%,
+			rgba(217, 217, 217, 0) 92.52%,
+			rgba(255, 0, 0, 0) 152.72%,
+			rgba(226, 216, 216, 0) 157.79%
+		);
+		border-radius: 36px 0 0 0;
+	}
+	#amiable-bg {
+		background: linear-gradient(
+			50.24deg,
+			rgba(65, 249, 35, 0.916667) -51.24%,
+			rgba(228, 216, 216, 0) 96.82%,
+			rgba(226, 216, 216, 0) 154.41%,
+			rgba(217, 217, 217, 0) 159.26%
+		);
+		border-radius: 0 0 0 36px;
+	}
+	#driver-bg {
+		background: linear-gradient(
+			223.79deg,
+			rgba(255, 186, 1, 0.916667) -58.63%,
+			rgba(228, 216, 216, 0) 92.52%,
+			rgba(226, 216, 216, 0) 152.72%,
+			rgba(217, 217, 217, 0) 157.79%
+		);
+		border-radius: 0 36px 0 0;
+	}
+	#expressive-bg {
+		background: linear-gradient(
+			318.52deg,
+			rgba(1, 166, 240, 0.916667) -58.63%,
+			rgba(228, 216, 216, 0) 92.52%,
+			rgba(226, 216, 216, 0) 152.72%,
+			rgba(217, 217, 217, 0) 157.79%
+		);
+		border-radius: 0 0 36px 0;
 	}
 </style>
