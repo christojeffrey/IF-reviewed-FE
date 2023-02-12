@@ -4,24 +4,34 @@
 	export let onSearch: any;
 	// import image
 	import searchIcon from '../../assets/search.png';
+
+	function handleSubmit(e: any) {
+		// check if searchQuery is empty
+		if (searchQuery) {
+			// if not empty, call onSearch
+			onSearch(e);
+		}
+	}
 </script>
 
 <!-- with icon on the right as opposed to button -->
 <div>
 	<div class="input-container">
-		<input type="text" bind:value={searchQuery} placeholder="Search" />
+		<form action="/search" method="get" on:submit|preventDefault={handleSubmit}>
+			<input type="text" bind:value={searchQuery} placeholder="Search" />
 
-		<button
-			on:click={(e) => {
-				// check if searchQuery is empty
-				if (searchQuery) {
-					// if not empty, call onSearch
-					onSearch(e);
-				}
-			}}
-		>
-			<img class="search-icon" src={searchIcon} alt="search" /></button
-		>
+			<button
+				on:click={(e) => {
+					// check if searchQuery is empty
+					if (searchQuery) {
+						// if not empty, call onSearch
+						onSearch(e);
+					}
+				}}
+			>
+				<img class="search-icon" src={searchIcon} alt="search" /></button
+			>
+		</form>
 	</div>
 </div>
 

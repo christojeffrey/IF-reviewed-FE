@@ -27,7 +27,7 @@
 	const auth = getAuth(app);
 	const provider = new GoogleAuthProvider();
 
-	let isLoggedIn: boolean = false;
+	let isLoggedIn: any = null;
 	let userData: any;
 	let isUserModalOpen: boolean = false;
 
@@ -151,7 +151,9 @@
 			</button>
 		</div>
 		<SearchBar bind:searchQuery onSearch={handleSearch} />
-		{#if isLoggedIn}
+		{#if isLoggedIn === null}
+			<div>loading</div>
+		{:else if isLoggedIn === true}
 			<div class="image-container">
 				<button on:click={handleImageClick}>
 					<img class="user-profile" src={userData.photoURL} alt="user profile" />
@@ -160,9 +162,10 @@
 					<div class="card"><button on:click={handleSignOut}>sign out</button></div>
 				{/if}
 			</div>
-		{:else}
-			<button on:click={handleLoginButton}>login</button>
+		{:else if isLoggedIn === false}
+			<button on:click={handleLoginButton}>Login</button>
 		{/if}
+
 		<!-- modal if isUserModalOpen -->
 		{#if isUserModalOpen}
 			<button class="background" on:click={handleBackgroundClick} />
