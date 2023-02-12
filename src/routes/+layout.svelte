@@ -19,6 +19,7 @@
 		min-height: 100%;
 		min-width: 100%;
 		position: relative;
+		background-color: #edf0f3;
 	}
 	.layout-wrapper {
 		display: flex;

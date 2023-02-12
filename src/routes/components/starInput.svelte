@@ -13,7 +13,22 @@
 	let emptyStar = 0;
 	let fullStar = 1;
 	let totalStars = 5;
+
+	let hoveredStar: any = null;
+	// stars depend on hovered star
+	// redraw stars when hovered star changes
 	let stars: any = [];
+	$: if (hoveredStar != null) {
+		// set all as false;
+		for (let i = 0; i < totalStars; i++) {
+			stars[i].isHovered = false;
+		}
+		// change the value of isHovered to true
+		// so that the star is redrawn
+		for (let i = 0; i < hoveredStar; i++) {
+			stars[i].isHovered = true;
+		}
+	}
 
 	function getStarPoints() {
 		let centerX = style.styleStarWidth / 2;
@@ -51,7 +66,8 @@
 			stars.push({
 				raw: emptyStar,
 				percent: emptyStar + '%',
-				value: i + 1
+				value: i + 1,
+				isHovered: false
 			});
 		}
 	}
@@ -86,7 +102,16 @@
 	}
 
 	function getFullFillColor(starData: any) {
-		return starData.raw !== emptyStar ? style.styleFullStarColor : style.styleEmptyStarColor;
+		// if raw == fullStar, then return fullStarColor,
+		// else if isHovered, then return grey
+		// else return emptyStarColor
+		if (starData.raw == fullStar) {
+			return style.styleFullStarColor;
+		} else if (starData.isHovered) {
+			return 'grey';
+		} else {
+			return style.styleEmptyStarColor;
+		}
 	}
 
 	onMount(() => {
@@ -113,39 +138,17 @@
 					on:click={(e) => onClickHandler(e)}
 				/>
 				<svg
+					on:mouseenter={() => {
+						hoveredStar = star.value;
+					}}
+					on:mouseleave={() => {
+						hoveredStar = 0;
+					}}
 					class="star-svg"
-					style="fill: url(#gradient{star.raw});height:{style.styleStarWidth};
-          width:{style.styleStarWidth}"
+					style="height:{style.styleStarWidth};
+          width:{style.styleStarWidth}; fill:{getFullFillColor(star)};"
 				>
-					<polygon points={getStarPoints()} style="fill-rule:nonzero;" />
-					<defs>
-						<linearGradient id="gradient{star.raw}">
-							<stop
-								id="stop1"
-								offset={star.percent}
-								stop-opacity="1"
-								stop-color={getFullFillColor(star)}
-							/>
-							<stop
-								id="stop2"
-								offset={star.percent}
-								stop-opacity="0"
-								stop-color={getFullFillColor(star)}
-							/>
-							<stop
-								id="stop3"
-								offset={star.percent}
-								stop-opacity="1"
-								stop-color={style.styleEmptyStarColor}
-							/>
-							<stop
-								id="stop4"
-								offset="100%"
-								stop-opacity="1"
-								stop-color={style.styleEmptyStarColor}
-							/>
-						</linearGradient>
-					</defs>
+					<polygon points={getStarPoints()} />
 				</svg>
 			</label>
 		{/each}
@@ -156,10 +159,6 @@
 </div>
 
 <style>
-	.star-rating {
-		display: flex;
-		align-items: center;
-	}
 	.star-rating {
 		display: flex;
 		align-items: center;

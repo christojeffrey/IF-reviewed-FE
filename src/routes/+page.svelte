@@ -3,6 +3,7 @@
 	import { afterUpdate, beforeUpdate, onMount } from 'svelte';
 	import Card from './components/card.svelte';
 	import { BACKEND_BASE_URL } from '../lib/constants';
+	import { goto } from '$app/navigation';
 
 	let userData: any = [];
 
@@ -17,7 +18,9 @@
 		console.log(searchQuery);
 		updateUserDataBasedOnQuery(searchQuery);
 	}
-
+	$: if (userData && userData.length != 0) {
+		isLoading = false;
+	}
 	function updateUserDataBasedOnQuery(query: string) {
 		isLoading = true;
 
@@ -42,6 +45,12 @@
 	}
 
 	onMount(async () => {
+		// check if there is error url param
+		if ($page.url.searchParams.get('error')) {
+			alert($page.url.searchParams.get('error'));
+			// remove the error url param
+			goto($page.url.pathname);
+		}
 		if (searchQuery) {
 			updateUserDataBasedOnQuery(searchQuery);
 		} else {

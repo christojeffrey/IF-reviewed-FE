@@ -3,16 +3,11 @@
 	import { page } from '$app/stores';
 	import { BACKEND_BASE_URL, COM_STYLES, RATE_VALUES } from '$lib/constants';
 	import { onMount } from 'svelte';
+	import { start_hydrating } from 'svelte/internal';
 	import Star from '../../components/starInput.svelte';
-	import Amiable from '../../../assets/amiable.jpg';
-	import Analytical from '../../../assets/analytical.jpg';
-	import Expressive from '../../../assets/expressive.jpg';
-	import Driver from '../../../assets/driving.jpg';
 
 	const NIM = $page.params.NIM;
-	const comStyles: any = COM_STYLES;
-	const rateVals: any = RATE_VALUES;
-	let selectedComStyles: number = 1;
+	$: selectedComStyles = 1;
 	let rating: any;
 	let UID: any;
 	let idToken: any;
@@ -23,16 +18,28 @@
 		styleEmptyStarColor: '#ffffff',
 		styleFullStarColor: '#ffd219'
 	};
+	let responseData: any = null;
 
+	let status: any = null;
+	let isLoading = false;
+	$: if (responseData) {
+		status = 'success!';
+		isLoading = false;
+	}
+	$: if (isLoading) {
+		status = 'loading...';
+	}
+	let isMounted = false;
 	onMount(async () => {
 		if (typeof localStorage !== 'undefined') {
 			UID = localStorage.getItem('uid');
 			idToken = localStorage.getItem('idToken');
 		}
-		if (!UID || !idToken) {
-			goto('/');
-		}
 
+		if (!UID || !idToken) {
+			goto('/?error=You need to login first');
+			return;
+		}
 		const res = await fetch(`${BACKEND_BASE_URL}/users/review/${NIM}/${UID}`, {
 			mode: 'cors',
 			method: 'GET',
@@ -50,7 +57,9 @@
 			console.log(data);
 			selectedComStyles = parseInt(data.data.comStyle);
 			rating = data.data.rating;
+			console.log(data);
 		}
+		isMounted = true;
 	});
 
 	function handleComStyleChange(e: any) {
@@ -59,10 +68,11 @@
 	}
 
 	async function handleSubmit(e: any) {
+		isLoading = true;
 		const body = {
 			NIM,
 			comStyle: selectedComStyles.toString(),
-			rating,
+			rating: parseInt(rating),
 			reviewerID: localStorage.getItem('uid')
 		};
 		const res = await fetch(`${BACKEND_BASE_URL}/form/${NIM}`, {
@@ -74,88 +84,99 @@
 				Authorization: 'Bearer ' + localStorage.getItem('idToken')
 			}
 		});
-		const data = await res.json();
-		console.log(data);
+		responseData = await res.json();
+		console.log(responseData);
 	}
+
+	let comStyles: any = {
+		1: {
+			title: 'ANALYTICAL',
+			trait1: 'serious',
+			trait2: 'critical',
+			bg: 'analytical-bg',
+			color: 'analytical-color'
+		},
+		2: {
+			title: 'DRIVER',
+			trait1: 'competitive',
+			trait2: 'ambitious',
+			bg: 'driver-bg',
+			color: 'driver-color'
+		},
+		3: {
+			title: 'AMIABLE',
+			trait1: 'friendly',
+			trait2: 'helpful',
+			bg: 'amiable-bg',
+			color: 'amiable-color'
+		},
+		4: {
+			title: 'EXPRESSIVE',
+			trait1: 'outgoing',
+			trait2: 'energetic',
+			bg: 'expressive-bg',
+			color: 'expressive-color'
+		}
+	};
 </script>
 
-<h1>Review {NIM}!</h1>
-<div class="form-container">
-	<form on:submit|preventDefault={handleSubmit}>
-		<div style="display: grid; justify-items: center;">
-			<div class="grid-container">
-				<div class="label-container" id="analytical-bg">
-					<label class="comStyle-label">
-						<input
-							type="radio"
-							name="comStyles"
-							id="amiable"
-							value="1"
-							on:click={handleComStyleChange}
-						/>
-						<h3>ANALYTICAL</h3>
-						<p>serious</p>
-						<p>critical</p>
-					</label>
-				</div>
-				<div class="label-container" id="driver-bg">
-					<label class="comStyle-label">
-						<input
-							type="radio"
-							name="comStyles"
-							id="driver"
-							value="2"
-							on:click={handleComStyleChange}
-						/>
-						<h3>DRIVER</h3>
-						<p>dominating</p>
-						<p>decisive</p>
-					</label>
-				</div>
-				<div class="label-container" id="amiable-bg">
-					<label class="comStyle-label">
-						<input
-							type="radio"
-							name="comStyles"
-							id="expressive"
-							value="3"
-							on:click={handleComStyleChange}
-						/>
-						<h3>AMIABLE</h3>
-						<p>agreeable</p>
-						<p>supportive</p>
-					</label>
-				</div>
-				<div class="label-container" id="expressive-bg">
-					<label class="comStyle-label">
-						<input
-							type="radio"
-							name="comStyles"
-							id="analytical"
-							value="4"
-							on:click={handleComStyleChange}
-						/>
-						<h3>EXPRESSIVE</h3>
-						<p>ambitious</p>
-						<p>enthusiastic</p>
-					</label>
+<!-- check isMounted -->
+{#if !isMounted}
+	<div class="loading">Loading...</div>
+{:else}
+	<h1>Review {NIM}!</h1>
+	<div class="form-container">
+		<form on:submit|preventDefault={handleSubmit}>
+			<div style="display: grid; justify-items: center;">
+				<div class="grid-container">
+					<!-- for earch comStyles -->
+					{#each Object.keys(comStyles) as comStyle}
+						<div
+							class="label-container"
+							id={comStyles[comStyle].bg}
+							style={selectedComStyles === parseInt(comStyle)
+								? 'background-color: #ffd219; color: #000000;'
+								: ''}
+						>
+							<label class="comStyle-label">
+								<input
+									type="radio"
+									name="comStyles"
+									id={comStyle}
+									value={comStyle}
+									on:click={handleComStyleChange}
+								/>
+								<h3>{comStyles[comStyle].title}</h3>
+								<p>{comStyles[comStyle].trait1}</p>
+								<p>{comStyles[comStyle].trait2}</p>
+							</label>
+						</div>
+					{/each}
 				</div>
 			</div>
-		</div>
-		<div class="label-select" style="margin-top: 3rem;">
-			<Star {isIndicatorActive} {style} bind:rating />
-		</div>
-		<button type="submit" id="submitButton">
-			{#if firstTime}
-				Submit
-			{:else}
-				Update
-			{/if}
-		</button>
-	</form>
-</div>
+			<div class="label-select" style="margin-top: 3rem;">
+				<Star {isIndicatorActive} {style} bind:rating />
+			</div>
+			<button type="submit" id="submitButton" disabled={isLoading}>
+				{#if firstTime}
+					Submit
+				{:else}
+					Update
+				{/if}
+			</button>
+		</form>
+	</div>
+	{#if status}
+		<div class="status">{status}</div>
+	{/if}
+{/if}
 
 <style>
+	.status {
+		width: 100%;
+		text-align: center;
+		font-size: 1.5rem;
+	}
 	.form-container {
 		display: flex;
 		flex-direction: column;
@@ -196,7 +217,6 @@
 		cursor: pointer;
 	}
 	label > input:checked {
-		border: 2px solid #f00;
 		font-size: x-small;
 	}
 	label > p {
@@ -233,8 +253,10 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-
+		justify-content: center;
 		margin: 0;
+		width: 100%;
+		height: 100%;
 	}
 	.label-container {
 		display: flex;
@@ -242,7 +264,6 @@
 		align-items: center;
 		aspect-ratio: 1/1;
 		width: 100%;
-		border: 4px solid #667181;
 		justify-content: center;
 	}
 	#analytical-bg {
@@ -255,6 +276,9 @@
 		);
 		border-radius: 36px 0 0 0;
 	}
+	#analytical-bg:hover {
+		background-color: rgba(1, 166, 240, 0.2);
+	}
 	#amiable-bg {
 		background: linear-gradient(
 			50.24deg,
@@ -264,6 +288,9 @@
 			rgba(217, 217, 217, 0) 159.26%
 		);
 		border-radius: 0 0 0 36px;
+	}
+	#amiable-bg:hover {
+		background-color: rgba(1, 166, 240, 0.2);
 	}
 	#driver-bg {
 		background: linear-gradient(
@@ -275,6 +302,9 @@
 		);
 		border-radius: 0 36px 0 0;
 	}
+	#driver-bg:hover {
+		background-color: rgba(1, 166, 240, 0.2);
+	}
 	#expressive-bg {
 		background: linear-gradient(
 			318.52deg,
@@ -284,5 +314,8 @@
 			rgba(217, 217, 217, 0) 157.79%
 		);
 		border-radius: 0 0 36px 0;
+	}
+	#expressive-bg:hover {
+		background-color: rgba(1, 166, 240, 0.2);
 	}
 </style>
