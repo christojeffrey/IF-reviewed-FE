@@ -126,7 +126,7 @@
 			</svg>
 		{/each}
 		{#if isIndicatorActive}
-			<div class="indicator">{rating.toFixed(1)}</div>
+			<div class="indicator">{rating}</div>
 		{/if}
 	</div>
 </div>

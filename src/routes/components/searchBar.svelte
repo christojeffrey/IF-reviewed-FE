@@ -52,7 +52,7 @@
 	.input-container {
 		/* rectangle with rounded */
 		border-radius: 1.5rem;
-		padding: 1rem;
+		padding: 10px;
 		width: fit-content;
 		/* flexbox */
 		display: flex;
