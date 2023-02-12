@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { BACKEND_BASE_URL, COM_STYLES, RATE_VALUES } from '$lib/constants';
+	import { BACKEND_BASE_URL } from '$lib/constants';
 	import { onMount } from 'svelte';
-	import { start_hydrating } from 'svelte/internal';
 	import Star from '../../components/starInput.svelte';
 
 	const NIM = $page.params.NIM;
