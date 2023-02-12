@@ -138,18 +138,20 @@
 								? 'background-color: #ffd219; color: #000000;'
 								: ''}
 						>
-							<label class="comStyle-label">
-								<input
-									type="radio"
-									name="comStyles"
-									id={comStyle}
-									value={comStyle}
-									on:click={handleComStyleChange}
-								/>
-								<h3>{comStyles[comStyle].title}</h3>
-								<p>{comStyles[comStyle].trait1}</p>
-								<p>{comStyles[comStyle].trait2}</p>
-							</label>
+							<div style="margin:10px;">
+								<label class="comStyle-label">
+									<input
+										type="radio"
+										name="comStyles"
+										id={comStyle}
+										value={comStyle}
+										on:click={handleComStyleChange}
+									/>
+									<h3>{comStyles[comStyle].title}</h3>
+									<p>{comStyles[comStyle].trait1}</p>
+									<p>{comStyles[comStyle].trait2}</p>
+								</label>
+							</div>
 						</div>
 					{/each}
 				</div>
@@ -193,13 +195,9 @@
 		grid-template-columns: repeat(2, 1fr);
 		grid-template-rows: repeat(2, 1fr);
 		align-items: center;
-		justify-items: center;
-		width: 70%;
 	}
 	label {
 		font-weight: bold;
-		margin-bottom: 0.5rem;
-		margin-top: 0.5rem;
 		font-size: large;
 	}
 	.label-select {
@@ -255,16 +253,15 @@
 		align-items: center;
 		justify-content: center;
 		margin: 0;
-		width: 100%;
-		height: 100%;
 	}
 	.label-container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		aspect-ratio: 1/1;
-		width: 100%;
 		justify-content: center;
+		min-width: 100%;
+		min-height: 100%;
 	}
 	#analytical-bg {
 		background: linear-gradient(
