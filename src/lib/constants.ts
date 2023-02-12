@@ -1,9 +1,9 @@
 export const BACKEND_BASE_URL = 'https://if-reviewed-be.vercel.app/api';
 export const COM_STYLES = [
-	{ value: 1, text: 'Amiable' },
-	{ value: 2, text: 'Driving' },
-	{ value: 3, text: 'Expressive' },
-	{ value: 4, text: 'Analytical' }
+	{ value: 1, text: 'Analytical' },
+	{ value: 2, text: 'Driver' },
+	{ value: 3, text: 'Amiable' },
+	{ value: 4, text: 'Expressive' }
 ];
 export const RATE_VALUES = [
 	{ value: 1, text: '1' },
