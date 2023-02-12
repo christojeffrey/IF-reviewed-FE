@@ -146,7 +146,12 @@
 <div class="navbar-container">
 	<div class="wrapper">
 		<div class="image-container">
-			<button on:click={() => goto('/')}>
+			<button
+				on:click={() => {
+					goto('/');
+					searchQuery = '';
+				}}
+			>
 				<img class="home-button" src={HMIFLogo} alt="Home" />
 			</button>
 		</div>

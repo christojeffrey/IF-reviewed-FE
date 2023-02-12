@@ -12,11 +12,15 @@
 	let searchQuery: any = $page.url.searchParams.get('searchQuery');
 	let isLoading: boolean = true;
 
-	$: if ($page.url.searchParams.get('searchQuery')) {
-		searchQuery = $page.url.searchParams.get('searchQuery');
-		console.log('searchQuery');
-		console.log(searchQuery);
-		updateUserDataBasedOnQuery(searchQuery);
+	$: if ($page.url) {
+		if ($page.url.searchParams.get('searchQuery')) {
+			searchQuery = $page.url.searchParams.get('searchQuery');
+			console.log('searchQuery');
+			console.log(searchQuery);
+			updateUserDataBasedOnQuery(searchQuery);
+		} else {
+			updateUserData();
+		}
 	}
 	$: if (userData && userData.length != 0) {
 		isLoading = false;
@@ -44,6 +48,20 @@
 			});
 	}
 
+	function updateUserData() {
+		isLoading = true;
+		const response = fetch(`${BACKEND_BASE_URL}/users/random`)
+			.then((response) => {
+				return response.json();
+			})
+			.then((data) => {
+				isLoading = false;
+				userData = data;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
 	onMount(async () => {
 		// check if there is error url param
 		if ($page.url.searchParams.get('error')) {
@@ -54,13 +72,7 @@
 		if (searchQuery) {
 			updateUserDataBasedOnQuery(searchQuery);
 		} else {
-			isLoading = true;
-			const response = await fetch(`${BACKEND_BASE_URL}/users/random`);
-			userData = await response.json();
-			if (userData.length == 0) {
-			}
-			isLoading = false;
-			console.log(userData);
+			updateUserData();
 		}
 	});
 </script>
