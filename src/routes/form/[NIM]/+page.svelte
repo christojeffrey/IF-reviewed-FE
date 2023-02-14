@@ -18,6 +18,7 @@
 		styleFullStarColor: '#ffd219'
 	};
 	let responseData: any = null;
+	let name: string;
 
 	let status: any = null;
 	let isLoading = false;
@@ -48,7 +49,8 @@
 			}
 		});
 		const data = await res.json();
-
+		name = data.data.name;
+		console.log(data);
 		if (data.error) {
 			firstTime = true;
 		} else {
@@ -123,7 +125,7 @@
 {#if !isMounted}
 	<div class="loading">Loading...</div>
 {:else}
-	<h1>Review {NIM}!</h1>
+	<h1>Review {name}!</h1>
 	<div class="form-container">
 		<form on:submit|preventDefault={handleSubmit}>
 			<div style="display: grid; justify-items: center;">
