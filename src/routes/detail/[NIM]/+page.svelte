@@ -13,6 +13,9 @@
 		styleEmptyStarColor: '#737373',
 		styleFullStarColor: '#ffd219'
 	};
+	let comStyleDetail: any = {};
+	let comStyleDetailText = '';
+
 	onMount(async () => {
 		isLoading = true;
 		const response = await fetch(`${BACKEND_BASE_URL}/user/${NIM}`, {
@@ -28,7 +31,22 @@
 		data = res.data;
 		console.log(data);
 		isLoading = false;
+
 		comSyle = data.comStyle == 0 ? '-' : COM_STYLES[data.comStyle - 1].text;
+		comStyleDetail = data.comStyleDetail;
+		// {
+		// "4": 1
+		// }
+		// change to text with percentage
+		if (comStyleDetail) {
+			Object.keys(comStyleDetail).forEach((key: any) => {
+				comStyleDetailText += `${COM_STYLES[key - 1].text} (${(
+					(comStyleDetail[key] * 100) /
+					data.totalReviews
+				).toFixed(2)}%), `;
+			});
+			comStyleDetailText = comStyleDetailText.slice(0, -2);
+		}
 	});
 </script>
 
@@ -43,6 +61,7 @@
 			<h3 id="comStyle">{comSyle}</h3>
 		</div>
 		<h2 id="nim">{data.NIM}</h2>
+		<div>{comStyleDetailText}</div>
 		<div class="review">
 			<div class="info-rating">
 				<Star rating={data.rating} {style} isIndicatorActive={false} />
