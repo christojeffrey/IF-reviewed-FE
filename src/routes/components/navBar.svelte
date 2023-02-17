@@ -6,8 +6,7 @@
 		GoogleAuthProvider,
 		signInWithPopup,
 		onAuthStateChanged,
-		signOut,
-		getIdToken
+		signOut
 	} from 'firebase/auth';
 	import { initializeApp } from 'firebase/app';
 	const firebaseConfig = {
